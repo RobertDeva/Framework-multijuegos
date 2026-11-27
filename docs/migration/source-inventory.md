@@ -1,45 +1,48 @@
 # Inventario de migración: Game-Logic-motor
 
-Este documento es el resumen arquitectónico de la migración. Para el detalle solicitado archivo por archivo —responsabilidad, dependencias/acoplamientos, pruebas, clasificación y destino— consulta el [inventario completo](source-inventory-detailed.md).
+Este documento resume la migración. Para el detalle archivo por archivo —responsabilidad, dependencias/acoplamientos, pruebas, clasificación y destino— consulta el [inventario completo](source-inventory-detailed.md).
 
-**Fuente inspeccionada:** `RobertDeva/Game-Logic-motor`  
-**Rama:** `main`  
+**Fuente:** `RobertDeva/Game-Logic-motor`, rama `main`  
 **HEAD verificado:** `788b4a5517a3c55dbc9780826ae0692f65af1949`  
 **Árbol Git:** `f07f2d001065c0f1becc6219e3ca7cc5a0012cf1`  
 **Destino:** `RobertDeva/Framework-multijuegos`
 
 La reinspección confirmó que el HEAD de origen coincide con la auditoría anterior. El árbol contiene 129 archivos versionados: 56 archivos C# de producción, 31 de pruebas, 31 Markdown, 5 proyectos .NET y 6 archivos de configuración/solución.
 
-## Fundamentos candidatos al Core
+## Fundamentos extraídos al Core
 
-| Archivos/rutas de origen | Destino | Tratamiento |
+| Origen | Destino | Estado |
 |---|---|---|
-| `Domain/Primitives/EntityId.cs` | Core/Primitives | Extraído como `EntityId` |
-| `Domain/Primitives/Result.cs` | Core/Primitives | Extraídos `Result<T>` y `GameError` |
-| `Domain/Primitives/SimulationDuration.cs`, `SimulationInstant.cs` | Core/Time | Extraídos como ticks lógicos |
-| `Application/Time/IGameClock.cs` | Core/Time | Interfaz y reloj manual extraídos |
-| `Domain/Abstractions/IRandomSource.cs` | Core/Randomness | Interfaz extraída |
-| `Infrastructure/Randomness/SeededRandomSource.cs` | Core/Randomness | Adaptado como generador determinista no criptográfico |
-| `Domain/Entities/DomainEntity.cs`, `EntityLifecycleState.cs` | Core/Entities | Extraídos como `EntityBase` y `EntityLifecycleState`; solo ciclo técnico |
-| `Domain/Actions/ActionId.cs`, `ActionDefinition.cs` | Core/Actions | Extraídos; describen y validan, no ejecutan |
-| `Domain/Conditions/*.cs` | Core/Conditions | Contratos y evaluación pura extraídos |
+| EntityId, Result<T>, GameError | Core/Primitives | Extraídos y probados |
+| SimulationDuration, SimulationInstant | Core/Time | Extraídos y probados |
+| IGameClock, ManualGameClock | Core/Time | Extraídos y probados |
+| IRandomSource, SeededRandomSource | Core/Randomness | Adaptados y probados |
+| DomainEntity, EntityLifecycleState | Core/Entities | Extraídos como EntityBase/EntityLifecycleState |
+| ActionId, ActionDefinition | Core/Actions | Extraídos; describen y validan, no ejecutan |
+| IGameCondition, ConditionEvaluation, ConditionFailure, ConditionSet | Core/Conditions | Extraídos y probados |
 
-## Candidatos que requieren adaptación
+## Módulos y Runtime
 
-| Archivos/rutas | Destino posible | Riesgo/condición |
+| Capacidad | Destino | Estado |
 |---|---|---|
-| `Domain/Resources/ResourceId.cs`, `ResourcePool.cs` | Modules.Resources | Extraídos como estado acotado; políticas de gasto/regeneración siguen fuera |
-| `Domain/Statistics/StatId.cs`, `StatValue.cs`, `StatModifier.cs`, `StatModifierOperation.cs`, `AttributeScalingCurve.cs` | Module.Statistics | Falta evaluador general de valor efectivo y política de orden/acumulación |
-| Modelos de `Domain/Combat` | Module.Combat | Separar parámetros configurables de fórmulas y semántica de Mythical Exodus |
-| `Application/Combat/NemesisWorldPresence.cs` | Posible módulo de presencia de actores | No extraer hasta validar un segundo caso de uso |
+| ResourceId, ResourcePool | Modules.Resources | Extraídos como estado acotado/inmutable; sin política de gasto/regeneración |
+| Ejecución de acciones y postacciones | Runtime.Actions | Implementada con profundidad-first, detección de ciclos, límites y outputs ordenados |
+| Despacho de eventos | Runtime | Pendiente |
+| Aplicación y ciclo de vida de efectos | Runtime | Pendiente |
+| Estadísticas | Modules.Statistics | Pendiente; falta evaluador efectivo y lifecycle |
+| Combate | Modules.Combat | Pendiente; separar parámetros configurables de reglas ME |
 
-## Exclusiones específicas de Mythical Exodus
+## Exclusiones de Mythical Exodus
 
-Mantener fuera del Core: `PlayerCharacter`, `PlayerClass`, `PlayerClassDefaults`, `CharacterAttribute`, `CharacterAttributes`, `MuertebenditaExecutionResolver`, `NemesisProgression`, `PlayerResurrectionState`, `ResurrectionState` y las reglas concretas de energías, postura, ejecuciones, jefes y balance.
+Mantener fuera del Core: PlayerCharacter, PlayerClass, PlayerClassDefaults, CharacterAttribute, CharacterAttributes, MuertebenditaExecutionResolver, NemesisProgression, PlayerResurrectionState, ResurrectionState y las reglas concretas de energías, postura, ejecuciones, jefes y balance.
 
-## Estado de extracción
+## Estado de la migración
 
-- Los fundamentos anteriores están en la rama `foundation/architecture-and-initial-extraction`.
-- El ciclo de vida, acciones y condiciones se añadieron en la fase actual; la CI del último commit está pendiente de resultado.
-- Resources ya es un módulo opcional independiente. Runtime tiene un primer pipeline de acciones/postacciones; despacho de eventos y lifecycle/aplicación de efectos siguen pendientes. Estadísticas y combate permanecen pendientes.
-- No se ha modificado `Game-Logic-motor`.
+- El repositorio fuente permanece intacto.
+- El inventario detallado registra los 129 archivos versionados.
+- La CI inicial del destino fue exitosa.
+- La CI de fundamentos, Resources y Runtime fue exitosa.
+- El commit actual de trabajo es `4e41a68977db414efdd9b9fe15cf9a2999c5c6bb`; 42 pruebas aprobadas, cero warnings y cero errores.
+- PR #1 continúa abierto como borrador; no se ha integrado en `main`.
+
+El runtime actual no debe describirse como un sistema completo de eventos/efectos hasta implementar el despacho de eventos y la aplicación/lifecycle de efectos.
