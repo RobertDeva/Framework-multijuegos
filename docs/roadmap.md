@@ -17,17 +17,23 @@
 - [ ] CI verde para el último commit de esta fase.
 - [ ] Revisión final de contratos y documentación antes de cerrar la fase.
 
-## Fase 2 — Runtime
-- Definir pipeline de comandos/acciones y handlers.
-- Definir eventos y sus límites de orden/entrega.
-- Definir efectos instantáneos y persistentes: origen, objetivo, duración, stacking, expiración y retirada.
-- Implementar postacciones múltiples y anidadas con límites explícitos de profundidad, número de operaciones, detección de ciclos, orden determinista y política de error.
+## Fase 2 — Runtime (primera vertical slice implementada; CI pendiente)
+- [x] Registro explícito de definiciones y handlers.
+- [x] Ejecución de múltiples postacciones anidadas en profundidad primero y orden determinista.
+- [x] Detección de ciclos por ActionId en la ruta de ancestros.
+- [x] Límites configurables de profundidad e invocaciones con máximos duros.
+- [x] Acumulación ordenada de eventos e intenciones de efecto; se publican solo si todo el árbol tiene éxito.
+- [x] Fallos de precondición/handler y excepciones convertidos a errores estables.
+- [ ] Despacho/entrega de eventos y política de suscriptores.
+- [ ] Modelo y ciclo de vida de efectos instantáneos/persistentes: origen, objetivo, duración, stacking, expiración y retirada.
+- [ ] Pruebas de integración con un módulo/juego real.
 - No introducir bus global hasta demostrar que la coordinación directa no basta.
 
 ## Fase 3 — Módulos compartidos
-- Recursos y estadísticas genéricas.
-- Combate configurable como módulo opcional.
-- Pruebas con reglas distintas de Mythical Exodus.
+- [x] Primer módulo opcional Resources: ResourceId y ResourcePool como estado acotado/inmutable.
+- [ ] Estadísticas genéricas: falta evaluador efectivo, lifecycle y políticas de stacking.
+- [ ] Combate configurable como módulo opcional.
+- [ ] Pruebas con reglas distintas de Mythical Exodus.
 
 ## Fase 4 — Primer cliente
 - Adaptador de Mythical Exodus y pruebas de paridad contra el motor de referencia.

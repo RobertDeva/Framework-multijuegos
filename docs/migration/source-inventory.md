@@ -41,5 +41,5 @@ Mantener fuera del Core: `PlayerCharacter`, `PlayerClass`, `PlayerClassDefaults`
 
 - Los fundamentos anteriores están en la rama `foundation/architecture-and-initial-extraction`.
 - El ciclo de vida, acciones y condiciones se añadieron en la fase actual; la CI del último commit está pendiente de resultado.
-- Resources ya es un módulo opcional independiente; estadísticas, combate y runtime general permanecen pendientes.
+- Resources ya es un módulo opcional independiente. Runtime tiene un primer pipeline de acciones/postacciones; despacho de eventos y lifecycle/aplicación de efectos siguen pendientes. Estadísticas y combate permanecen pendientes.
 - No se ha modificado `Game-Logic-motor`.

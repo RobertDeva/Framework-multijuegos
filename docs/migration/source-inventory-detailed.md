@@ -174,6 +174,7 @@ Clasificación: **Core** = mecanismo independiente de juego; **Módulo** = capac
 | Domain/Actions/ActionId.cs | Core/Actions/ActionId.cs | Extraído y probado |
 | Domain/Actions/ActionDefinition.cs | Core/Actions/ActionDefinition.cs | Extraído y probado; no ejecuta |
 | Domain/Conditions/*.cs | Core/Conditions/*.cs | Extraídos y probados |
+| Definición de acción + contratos de Runtime | Runtime/Actions/ActionExecutionPipeline | Ejecuta árboles de postacciones y devuelve eventos/efectos ordenados; no los despacha ni aplica |
 | Domain/Resources/ResourceId.cs, ResourcePool.cs | Modules.Resources | Extraídos como estado acotado e inmutable; las políticas siguen siendo responsabilidad del juego |
 | Domain/Statistics/* | Module.Statistics | Pendiente; falta evaluador efectivo y lifecycle |
 | Domain/Combat/* | Module.Combat | Pendiente; no copiar fórmulas/reglas ME |
@@ -185,17 +186,23 @@ Clasificación: **Core** = mecanismo independiente de juego; **Módulo** = capac
 
 `ResourceId` y `ResourcePool` se han extraído a `FrameworkMultijuegos.Modules.Resources`, con proyecto y pruebas independientes. El módulo no referencia Core porque estos dos tipos no necesitan sus contratos. No implementa gasto, regeneración, costes, deuda, recarga ni overflow. Esa exclusión evita convertir políticas de un juego en comportamiento universal.
 
-## G. Límites y riesgos
+## G. Primera capacidad de Runtime incorporada
+
+`FrameworkMultijuegos.Runtime` contiene un pipeline de ejecución de acciones registrado explícitamente. Ejecuta postacciones múltiples y anidadas en profundidad primero, conserva el orden de eventos/intenciones de efecto, detecta ciclos en la ruta de ancestros y limita profundidad e invocaciones. Los resultados se publican solo si todo el árbol tiene éxito. Los handlers deben ser deterministas y no mutar estado externo.
+
+El pipeline todavía no despacha eventos ni aplica efectos. La entrega de eventos, el ciclo de vida de efectos persistentes, stacking, expiración y retirada son trabajo pendiente; no se declaran implementados.
+
+## H. Límites y riesgos
 
 1. El repositorio fuente permanece intacto.
 2. El repositorio fuente no declara una licencia en los metadatos de GitHub. La migración es entre repositorios del mismo propietario/autor identificado y no incorpora código de terceros. Antes de publicar paquetes o aceptar contribuciones externas, el propietario debe elegir y añadir una licencia explícita.
 3. Atributos, clases de personaje, energías, Muertebendita, Nemesis, resurrección, postura, fórmulas y balance permanecen fuera del Core.
 4. `ActionDefinition` solo describe y valida precondiciones; no ejecuta.
 5. `EntityBase.Remove()` solo retira una entidad de la simulación; no significa muerte/destrucción.
-6. No existe pipeline general de eventos, efectos o postacciones en el origen. Es trabajo nuevo de Runtime.
+6. El origen no contiene un pipeline general de eventos/efectos/postacciones. En destino existe un primer pipeline de acciones/postacciones; el despacho de eventos y la aplicación/lifecycle de efectos siguen pendientes.
 7. No se añade ECS, carga dinámica de plugins, event sourcing, scripting ni editor sin casos de uso verificables.
 
-## H. Reinspección y CI
+## I. Reinspección y CI
 
 - HEAD origen: `788b4a5517a3c55dbc9780826ae0692f65af1949`; coincide con auditoría anterior.
 - CI origen, ejecución `45895955807`: restore/build/test exitosos.
