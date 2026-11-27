@@ -6,4 +6,12 @@ El desarrollo comienza con una extracción controlada de componentes genéricos 
 
 ## Estado
 
-En preparación: inventario de migración, arquitectura base y primera extracción de fundamentos. Consulta `docs/` para decisiones y alcance.
+La solución .NET 8, el Core inicial, las pruebas y la CI están creados en la rama de trabajo. Se han extraído identidad, resultados/errores, tiempo lógico, reloj manual, aleatoriedad determinista, ciclo de vida técnico, definiciones de acciones y condiciones. La fase de acciones/condiciones y ciclo de vida está pendiente de validación CI del último commit.
+
+## Documentación
+
+- [Arquitectura objetivo](docs/architecture/overview.md)
+- [Inventario resumido](docs/migration/source-inventory.md)
+- [Inventario detallado archivo por archivo](docs/migration/source-inventory-detailed.md)
+- [Hoja de ruta y criterios de avance](docs/roadmap.md)
+- [Decisiones arquitectónicas](docs/adr/)
