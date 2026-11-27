@@ -43,7 +43,7 @@ Mantener fuera del Core: PlayerCharacter, PlayerClass, PlayerClassDefaults, Char
 - La CI inicial del destino fue exitosa.
 - La CI de fundamentos, Resources y Runtime fue exitosa.
 - El último commit con código es `4e41a68977db414efdd9b9fe15cf9a2999c5c6bb`; 42 pruebas aprobadas, cero warnings y cero errores.
-- HEAD actual de la rama, `7fb3c6fab5ce640e5e8440699d376c07c93700ce`, solo actualiza documentación y su CI de push/PR también fue exitosa.
+- Las actualizaciones documentales posteriores también pasaron restore/build/test en CI.
 - PR #1 continúa abierto como borrador; no se ha integrado en `main`.
 
 El runtime actual no debe describirse como un sistema completo de eventos/efectos hasta implementar el despacho de eventos y la aplicación/lifecycle de efectos.

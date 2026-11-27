@@ -211,6 +211,6 @@ El pipeline todavía no despacha eventos ni aplica efectos. La entrega de evento
 - Commit de Resources `0819da1ad7e40b3d22af2992818c509f3566ed3f`: CI exitosa.
 - Commit de Runtime `4e41a68977db414efdd9b9fe15cf9a2999c5c6bb`: CI exitosa; 42 pruebas aprobadas, cero warnings y cero errores.
 - Commit documental actual `7fb3c6fab5ce640e5e8440699d376c07c93700ce`: CI de push y PR exitosa; no cambia código.
-- HEAD actual de la rama de trabajo: `7fb3c6fab5ce640e5e8440699d376c07c93700ce`.
+- La última actualización documental fue validada por CI (ejecución `45919439554`): restore/build/test exitosos.
 
 Actualizar este inventario si cambia el HEAD de origen o se incorpora una extracción nueva.
