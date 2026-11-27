@@ -6,6 +6,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrameworkMultijuegos.Core",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrameworkMultijuegos.Core.Tests", "tests\FrameworkMultijuegos.Core.Tests\FrameworkMultijuegos.Core.Tests.csproj", "{7F7A2F70-9A2C-4A52-8F5A-9A1C0E71C102}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrameworkMultijuegos.Modules.Resources", "src\FrameworkMultijuegos.Modules.Resources\FrameworkMultijuegos.Modules.Resources.csproj", "{7F7A2F70-9A2C-4A52-8F5A-9A1C0E71C103}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrameworkMultijuegos.Modules.Resources.Tests", "tests\FrameworkMultijuegos.Modules.Resources.Tests\FrameworkMultijuegos.Modules.Resources.Tests.csproj", "{7F7A2F70-9A2C-4A52-8F5A-9A1C0E71C104}"
+EndProject
 Global
   GlobalSection(SolutionConfigurationPlatforms) = preSolution
     Debug|Any CPU = Debug|Any CPU
@@ -20,5 +24,13 @@ Global
     {7F7A2F70-9A2C-4A52-8F5A-9A1C0E71C102}.Debug|Any CPU.Build.0 = Debug|Any CPU
     {7F7A2F70-9A2C-4A52-8F5A-9A1C0E71C102}.Release|Any CPU.ActiveCfg = Release|Any CPU
     {7F7A2F70-9A2C-4A52-8F5A-9A1C0E71C102}.Release|Any CPU.Build.0 = Release|Any CPU
+    {7F7A2F70-9A2C-4A52-8F5A-9A1C0E71C103}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+    {7F7A2F70-9A2C-4A52-8F5A-9A1C0E71C103}.Debug|Any CPU.Build.0 = Debug|Any CPU
+    {7F7A2F70-9A2C-4A52-8F5A-9A1C0E71C103}.Release|Any CPU.ActiveCfg = Release|Any CPU
+    {7F7A2F70-9A2C-4A52-8F5A-9A1C0E71C103}.Release|Any CPU.Build.0 = Release|Any CPU
+    {7F7A2F70-9A2C-4A52-8F5A-9A1C0E71C104}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+    {7F7A2F70-9A2C-4A52-8F5A-9A1C0E71C104}.Debug|Any CPU.Build.0 = Debug|Any CPU
+    {7F7A2F70-9A2C-4A52-8F5A-9A1C0E71C104}.Release|Any CPU.ActiveCfg = Release|Any CPU
+    {7F7A2F70-9A2C-4A52-8F5A-9A1C0E71C104}.Release|Any CPU.Build.0 = Release|Any CPU
   EndGlobalSection
 EndGlobal

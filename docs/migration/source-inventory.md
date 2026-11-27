@@ -28,7 +28,7 @@ La reinspección confirmó que el HEAD de origen coincide con la auditoría ante
 
 | Archivos/rutas | Destino posible | Riesgo/condición |
 |---|---|---|
-| `Domain/Resources/ResourceId.cs`, `ResourcePool.cs` | Module.Resources | Falta política general de regeneración, coste, deuda y límites |
+| `Domain/Resources/ResourceId.cs`, `ResourcePool.cs` | Modules.Resources | Extraídos como estado acotado; políticas de gasto/regeneración siguen fuera |
 | `Domain/Statistics/StatId.cs`, `StatValue.cs`, `StatModifier.cs`, `StatModifierOperation.cs`, `AttributeScalingCurve.cs` | Module.Statistics | Falta evaluador general de valor efectivo y política de orden/acumulación |
 | Modelos de `Domain/Combat` | Module.Combat | Separar parámetros configurables de fórmulas y semántica de Mythical Exodus |
 | `Application/Combat/NemesisWorldPresence.cs` | Posible módulo de presencia de actores | No extraer hasta validar un segundo caso de uso |
@@ -41,5 +41,5 @@ Mantener fuera del Core: `PlayerCharacter`, `PlayerClass`, `PlayerClassDefaults`
 
 - Los fundamentos anteriores están en la rama `foundation/architecture-and-initial-extraction`.
 - El ciclo de vida, acciones y condiciones se añadieron en la fase actual; la CI del último commit está pendiente de resultado.
-- Recursos, estadísticas, combate y runtime general permanecen pendientes.
+- Resources ya es un módulo opcional independiente; estadísticas, combate y runtime general permanecen pendientes.
 - No se ha modificado `Game-Logic-motor`.

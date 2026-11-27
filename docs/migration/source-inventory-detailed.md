@@ -59,8 +59,8 @@ Clasificación: **Core** = mecanismo independiente de juego; **Módulo** = capac
 | `Domain/Primitives/Result.cs` | Resultado tipado y GameError | Sin dependencia externa | ResultTests | Core | Extraído a Core/Primitives |
 | `Domain/Primitives/SimulationDuration.cs` | Duración lógica no negativa | Sin dependencia externa | SimulationTimeTests | Core | Extraído a Core/Time |
 | `Domain/Primitives/SimulationInstant.cs` | Instante lógico y tiempo transcurrido | SimulationDuration | SimulationTimeTests | Core | Extraído a Core/Time |
-| `Domain/Resources/ResourceId.cs` | Identificador de recurso | Sin dependencia externa | ResourcePoolTests | Módulo | Pendiente en Module.Resources |
-| `Domain/Resources/ResourcePool.cs` | Cantidad actual y máxima, gasto/recuperación | ResourceId | ResourcePoolTests, CombatantResourceStateTests | Módulo | Candidato; faltan políticas de coste, regeneración y recarga |
+| `Domain/Resources/ResourceId.cs` | Identificador de recurso | Sin dependencia externa | ResourcePoolTests | Módulo | Extraído a Modules.Resources/Resources/ResourceId.cs |
+| `Domain/Resources/ResourcePool.cs` | Cantidad actual y máxima, actualizaciones inmutables | ResourceId | ResourcePoolTests, CombatantResourceStateTests | Módulo | Extraído a Modules.Resources; las políticas de coste/regeneración siguen fuera |
 | `Domain/Statistics/AttributeScalingCurve.cs` | Curvas de escalado vinculadas a atributos ME | Domain.Characters.CharacterAttribute | StatModelTests y pruebas de daño | ME/módulo candidato | No extraer en su forma actual; eliminar dependencia del enum ME |
 | `Domain/Statistics/StatId.cs` | Identificador de estadística | Sin dependencia externa | StatModelTests | Módulo | Candidato a Module.Statistics |
 | `Domain/Statistics/StatModifier.cs` | Modificador con fuente, objetivo, operación y valor | Domain.Primitives | StatModelTests | Módulo | Extraer como dato; falta lifecycle de modificadores |
@@ -102,7 +102,7 @@ Clasificación: **Core** = mecanismo independiente de juego; **Módulo** = capac
 | `Primitives/EntityIdTests.cs` | Identidad no vacía | Adaptado en Core.Tests/Primitives |
 | `Primitives/ResultTests.cs` | Result y GameError | Adaptado en Core.Tests/Primitives |
 | `Primitives/SimulationTimeTests.cs` | Instantes y duraciones | Adaptado en Core.Tests/Time |
-| `Resources/ResourcePoolTests.cs` | Capacidad y cantidad de recursos | Mantener como referencia de módulo |
+| `Resources/ResourcePoolTests.cs` | Capacidad, límites y actualizaciones de recursos | Adaptado en Modules.Resources.Tests |
 | `Statistics/StatModelTests.cs` | Identificadores, valores y modificadores | Mantener como referencia de módulo |
 | `Usings.cs` | Import global de xUnit | No migrar; pertenece a cada proyecto de pruebas |
 
@@ -174,14 +174,18 @@ Clasificación: **Core** = mecanismo independiente de juego; **Módulo** = capac
 | Domain/Actions/ActionId.cs | Core/Actions/ActionId.cs | Extraído y probado |
 | Domain/Actions/ActionDefinition.cs | Core/Actions/ActionDefinition.cs | Extraído y probado; no ejecuta |
 | Domain/Conditions/*.cs | Core/Conditions/*.cs | Extraídos y probados |
-| Domain/Resources/* | Module.Resources | Pendiente; políticas no suficientemente generales |
+| Domain/Resources/ResourceId.cs, ResourcePool.cs | Modules.Resources | Extraídos como estado acotado e inmutable; las políticas siguen siendo responsabilidad del juego |
 | Domain/Statistics/* | Module.Statistics | Pendiente; falta evaluador efectivo y lifecycle |
 | Domain/Combat/* | Module.Combat | Pendiente; no copiar fórmulas/reglas ME |
 | Application/Combat/* | Cliente ME / posible módulo de presencia | Específico o candidato sin extraer |
 | Infrastructure/Persistence/* | Adaptador del cliente ME | Específico |
 | Headless/Program.cs | Host futuro | No migrado; no es runtime |
 
-## F. Límites y riesgos
+## F. Módulo compartido incorporado: Resources
+
+`ResourceId` y `ResourcePool` se han extraído a `FrameworkMultijuegos.Modules.Resources`, con proyecto y pruebas independientes. El módulo no referencia Core porque estos dos tipos no necesitan sus contratos. No implementa gasto, regeneración, costes, deuda, recarga ni overflow. Esa exclusión evita convertir políticas de un juego en comportamiento universal.
+
+## G. Límites y riesgos
 
 1. El repositorio fuente permanece intacto.
 2. El repositorio fuente no declara una licencia en los metadatos de GitHub. La migración es entre repositorios del mismo propietario/autor identificado y no incorpora código de terceros. Antes de publicar paquetes o aceptar contribuciones externas, el propietario debe elegir y añadir una licencia explícita.
@@ -191,12 +195,12 @@ Clasificación: **Core** = mecanismo independiente de juego; **Módulo** = capac
 6. No existe pipeline general de eventos, efectos o postacciones en el origen. Es trabajo nuevo de Runtime.
 7. No se añade ECS, carga dinámica de plugins, event sourcing, scripting ni editor sin casos de uso verificables.
 
-## G. Reinspección y CI
+## H. Reinspección y CI
 
 - HEAD origen: `788b4a5517a3c55dbc9780826ae0692f65af1949`; coincide con auditoría anterior.
 - CI origen, ejecución `45895955807`: restore/build/test exitosos.
 - CI inicial destino, ejecución `45918025870`: restore/build/test exitosos.
 - PR destino: `#1`, rama `foundation/architecture-and-initial-extraction`, draft, sin merge.
-- La fase actual de ciclo de vida/acciones/condiciones debe considerarse implementada pero pendiente de CI hasta que el último commit tenga un check exitoso.
+- La fase de ciclo de vida/acciones/condiciones y el módulo Resources se han implementado; la CI del último commit sigue siendo requisito antes de cerrar la validación.
 
 Actualizar este inventario si cambia el HEAD de origen o se incorpora una extracción nueva.
