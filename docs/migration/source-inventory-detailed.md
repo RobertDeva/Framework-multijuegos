@@ -207,10 +207,10 @@ El pipeline todavía no despacha eventos ni aplica efectos. La entrega de evento
 - HEAD origen: `788b4a5517a3c55dbc9780826ae0692f65af1949`; coincide con auditoría anterior.
 - CI origen, ejecución `45895955807`: restore/build/test exitosos.
 - CI inicial destino, ejecución `45918025870`: restore/build/test exitosos.
-- PR destino: `#1`, rama `foundation/architecture-and-initial-extraction`, draft, sin merge.
 - Commit de ciclo de vida/acciones/condiciones `e73cea1e5c37b9f994645c9c32d5bdf997c9bc39`: CI exitosa.
 - Commit de Resources `0819da1ad7e40b3d22af2992818c509f3566ed3f`: CI exitosa.
 - Commit de Runtime `4e41a68977db414efdd9b9fe15cf9a2999c5c6bb`: CI exitosa; 42 pruebas aprobadas, cero warnings y cero errores.
-- HEAD actual de la rama de trabajo: `4e41a68977db414efdd9b9fe15cf9a2999c5c6bb`.
+- Commit documental actual `7fb3c6fab5ce640e5e8440699d376c07c93700ce`: CI de push y PR exitosa; no cambia código.
+- HEAD actual de la rama de trabajo: `7fb3c6fab5ce640e5e8440699d376c07c93700ce`.
 
 Actualizar este inventario si cambia el HEAD de origen o se incorpora una extracción nueva.

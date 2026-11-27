@@ -8,7 +8,7 @@ El desarrollo comienza con una extracción controlada de componentes genéricos 
 
 La solución .NET 8 tiene Core, Runtime y un primer módulo opcional de recursos. Se han extraído identidad, resultados/errores, tiempo lógico, reloj manual, aleatoriedad determinista, ciclo de vida técnico, definiciones de acciones y condiciones. Runtime ejecuta múltiples postacciones anidadas con límites y devuelve eventos/intenciones de efecto ordenados.
 
-La última CI verificada (commit `4e41a68977db414efdd9b9fe15cf9a2999c5c6bb`) completó restore, build y test: **42 pruebas aprobadas, 0 warnings y 0 errores**. El PR sigue en borrador y no se ha integrado en `main`.
+La CI del commit de código `4e41a68977db414efdd9b9fe15cf9a2999c5c6bb` completó restore, build y test: **42 pruebas aprobadas, 0 warnings y 0 errores**. El commit documental actual `7fb3c6fab5ce640e5e8440699d376c07c93700ce` también tiene CI exitosa. El PR sigue en borrador y no se ha integrado en `main`.
 
 ## Documentación
 
