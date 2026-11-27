@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>FrameworkMultijuegos.Core</AssemblyName>
+    <RootNamespace>FrameworkMultijuegos.Core</RootNamespace>
+  </PropertyGroup>
+</Project>
