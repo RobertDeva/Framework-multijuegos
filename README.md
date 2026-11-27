@@ -6,7 +6,7 @@ El desarrollo comienza con una extracción controlada de componentes genéricos 
 
 ## Estado
 
-La solución .NET 8, el Core inicial, las pruebas y la CI están creados en la rama de trabajo. Se han extraído identidad, resultados/errores, tiempo lógico, reloj manual, aleatoriedad determinista, ciclo de vida técnico, definiciones de acciones y condiciones. La fase de acciones/condiciones y ciclo de vida está pendiente de validación CI del último commit.
+La solución .NET 8, el Core inicial, las pruebas y la CI están creados en la rama de trabajo. Se han extraído identidad, resultados/errores, tiempo lógico, reloj manual, aleatoriedad determinista, ciclo de vida técnico, definiciones de acciones y condiciones. La última extracción está pendiente de validación CI.
 
 ## Documentación
 

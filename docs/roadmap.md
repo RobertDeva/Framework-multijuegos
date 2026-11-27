@@ -1,13 +1,13 @@
 # Hoja de ruta
 
-## Fase 0 — Base verificable <badge>Completada en rama</badge>
+## Fase 0 — Base verificable (completada en rama)
 - Reinspección de origen y destino.
 - Inventario resumido y detallado del repositorio fuente.
 - Solución .NET 8, Core inicial, pruebas y CI.
-- Validación del commit inicial: restore, build y test en GitHub Actions.
+- Restore, build y test verificados para el commit inicial de la rama.
 - No se ha integrado en `main`.
 
-## Fase 1 — Fundamentos <badge>Implementación en validación</badge>
+## Fase 1 — Fundamentos (implementación en validación CI)
 - [x] EntityId, Result<T>, GameError.
 - [x] SimulationDuration, SimulationInstant, IGameClock y ManualGameClock.
 - [x] IRandomSource y generador determinista.
