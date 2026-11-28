@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>FrameworkMultijuegos.Runtime</AssemblyName>
+    <RootNamespace>FrameworkMultijuegos.Runtime</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../FrameworkMultijuegos.Core/FrameworkMultijuegos.Core.csproj" />
+  </ItemGroup>
+</Project>

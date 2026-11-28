@@ -6,4 +6,17 @@ El desarrollo comienza con una extracción controlada de componentes genéricos 
 
 ## Estado
 
-En preparación: inventario de migración, arquitectura base y primera extracción de fundamentos. Consulta `docs/` para decisiones y alcance.
+La solución .NET 8 tiene Core, Runtime y un primer módulo opcional de recursos. Se han extraído identidad, resultados/errores, tiempo lógico, reloj manual, aleatoriedad determinista, ciclo de vida técnico, definiciones de acciones y condiciones. Runtime ejecuta múltiples postacciones anidadas y despacha eventos en cascadas FIFO deterministas mediante handlers explícitos y acotados. Devuelve intenciones de efecto, pero todavía no las aplica.
+
+La CI del commit `b3d76f8133bb7444c3880b4df5cc10c1c318282b` completó restore, build y test: **53 pruebas aprobadas, 0 warnings y 0 errores** (Core 23, Resources 9, Runtime 21). El PR #1 sigue abierto en borrador y no se ha integrado en `main`.
+
+## Documentación
+
+- [Arquitectura objetivo](docs/architecture/overview.md)
+- [Inventario resumido](docs/migration/source-inventory.md)
+- [Inventario detallado archivo por archivo](docs/migration/source-inventory-detailed.md)
+- [Dependencias y referencias entre proyectos](docs/dependencies.md)
+- [Ejecución de acciones en Runtime](docs/runtime/action-execution.md)
+- [Despacho de eventos en Runtime](docs/runtime/event-dispatch.md)
+- [Hoja de ruta y criterios de avance](docs/roadmap.md)
+- [Decisiones arquitectónicas](docs/adr/)

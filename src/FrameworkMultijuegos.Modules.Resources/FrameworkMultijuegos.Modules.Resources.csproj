@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>FrameworkMultijuegos.Modules.Resources</AssemblyName>
+    <RootNamespace>FrameworkMultijuegos.Modules.Resources</RootNamespace>
+  </PropertyGroup>
+</Project>
