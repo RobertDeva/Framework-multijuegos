@@ -34,7 +34,7 @@ Los límites impiden que una cadena cíclica o una combinación explosiva de han
 
 ## Pureza y garantías
 
-Los handlers y sus filtros deben ser deterministas y no mutar el contexto ni estado externo. Deben devolver intenciones en vez de aplicar cambios directamente.
+Los handlers y sus filtros deben ser deterministas y no mutar el contexto, el evento recibido ni estado externo. Todos reciben el mismo contexto explícito de la llamada; el dispatcher no aplica cambios ni crea un contexto nuevo entre eventos. Deben devolver intenciones en vez de aplicar cambios directamente. Si una cascada necesita observar efectos intermedios, esa semántica debe definirse en la etapa de aplicación/orquestación de efectos.
 
 El reporte solo publica los outputs planificados cuando toda la cascada termina correctamente. Esto es una garantía de planificación, **no un rollback transaccional**: el Runtime no puede revertir mutaciones externas que un handler haga incumpliendo el contrato. La aplicación posterior de efectos todavía debe definir sus propias garantías y límites transaccionales.
 

@@ -215,6 +215,6 @@ Ambos pipelines requieren handlers deterministas y sin mutaciones externas. El d
 - Commit de Runtime `4e41a68977db414efdd9b9fe15cf9a2999c5c6bb`: CI exitosa; 42 pruebas aprobadas, cero warnings y cero errores.
 - Commit documental actual `7fb3c6fab5ce640e5e8440699d376c07c93700ce`: CI de push y PR exitosa; no cambia código.
 - La última actualización documental previa fue validada por CI (ejecución `45919552547`): restore/build/test exitosos.
-- HEAD del destino antes de esta iteración: `2537c474cfc3b37309dbf879585ec1e3d1c9a990`; PR #1 abierto como borrador y sin merge. La nueva vertical slice de despacho de eventos queda pendiente de la CI de su commit.
+- Commit de despacho de eventos `f5bf6f7e19a5dc518266d7d27d504bee4b45e306`: CI de push `46137075038` y CI de PR `46137070751` exitosas; restore/build/test completados, 50 pruebas aprobadas (Core 23, Resources 9, Runtime 18), cero warnings y cero errores. PR #1 permanece abierto como borrador y sin merge.
 
 Actualizar este inventario si cambia el HEAD de origen o se incorpora una extracción nueva.

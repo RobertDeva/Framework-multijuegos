@@ -2,7 +2,7 @@ namespace FrameworkMultijuegos.Runtime.Events;
 
 /// <summary>
 /// Evaluates and handles an event against an explicit context. Implementations must be
-/// deterministic and must not mutate the context or external state.
+/// deterministic and must not mutate the context, event, or external state.
 /// </summary>
 public interface IEventHandler<TContext, TEvent, TEffect>
     where TEvent : notnull
