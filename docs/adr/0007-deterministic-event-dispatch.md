@@ -16,7 +16,7 @@ Introducir `EventDispatchPipeline<TContext,TEvent,TEffect>` dentro de Runtime co
 3. filtro `CanHandle` y handler `Handle` por contrato;
 4. evaluación en orden de registro;
 5. cola FIFO para eventos derivados;
-6. límites configurables de eventos y evaluaciones;
+6. límites configurables de eventos programados, evaluaciones e intenciones de efecto;
 7. outputs de eventos/efectos publicados solo si toda la cascada termina con éxito.
 
 Los handlers son planificadores puros: no mutan el contexto ni estado externo. El pipeline conserva una traza de eventos procesados al fallar, pero descarta los outputs planificados.

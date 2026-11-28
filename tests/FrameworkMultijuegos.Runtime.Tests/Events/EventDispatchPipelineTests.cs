@@ -83,8 +83,8 @@ public sealed class EventDispatchPipelineTests
 
         Assert.False(report.IsSuccess);
         Assert.Equal("event.dispatch_limit_exceeded", report.Failure!.Error.Code);
-        Assert.Equal(3, report.Failure.EventIndex);
-        Assert.Null(report.Failure.HandlerIndex);
+        Assert.Equal(2, report.Failure.EventIndex);
+        Assert.Equal(0, report.Failure.HandlerIndex);
         Assert.Equal(["start", "next", "next"], report.DispatchedEvents);
         Assert.Empty(report.FollowUpEvents);
         Assert.Empty(report.Effects);
@@ -188,15 +188,87 @@ public sealed class EventDispatchPipelineTests
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             new EventDispatchLimits(EventDispatchLimits.MaximumSupportedEvents + 1, 1));
         Assert.Throws<ArgumentOutOfRangeException>(() => new EventDispatchLimits(1, 0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new EventDispatchLimits(1, 1, 0));
 
         Assert.Throws<ArgumentException>(() =>
             new EventDispatchPipeline<int, string, string>([null!]));
 
         Assert.Throws<ArgumentException>(() =>
             EventHandlerResult<string, string>.Success(followUpEvents: [null!]));
+        Assert.Throws<ArgumentException>(() =>
+            EventHandlerResult<string, string>.Success(
+                followUpEvents: Enumerable.Repeat("next", EventDispatchLimits.MaximumSupportedEvents + 1)));
 
         var pipeline = new EventDispatchPipeline<int, string, string>([]);
         Assert.Throws<ArgumentException>(() => pipeline.Dispatch(0, [null!]));
+    }
+
+    [Fact]
+    public void RejectsInitialBatchThatExceedsTheEventLimitBeforeDispatching()
+    {
+        var calls = 0;
+        var pipeline = new EventDispatchPipeline<int, string, string>(
+        [
+            Handler(
+                (_, _) => true,
+                (_, _) =>
+                {
+                    calls++;
+                    return EventHandlerResult<string, string>.Success();
+                })
+        ],
+        new EventDispatchLimits(maximumEvents: 2, maximumHandlerInvocations: 10));
+
+        var report = pipeline.Dispatch(0, ["first", "second", "third"]);
+
+        Assert.False(report.IsSuccess);
+        Assert.Equal("event.dispatch_limit_exceeded", report.Failure!.Error.Code);
+        Assert.Equal(2, report.Failure.EventIndex);
+        Assert.Null(report.Failure.HandlerIndex);
+        Assert.Empty(report.DispatchedEvents);
+        Assert.Equal(0, calls);
+    }
+
+    [Fact]
+    public void RejectsFollowUpBatchThatWouldExceedTheEventLimit()
+    {
+        var pipeline = new EventDispatchPipeline<int, string, string>(
+        [
+            Handler(
+                (_, _) => true,
+                (_, _) => EventHandlerResult<string, string>.Success(
+                    followUpEvents: ["one", "two", "three"]))
+        ],
+        new EventDispatchLimits(maximumEvents: 3, maximumHandlerInvocations: 10));
+
+        var report = pipeline.Dispatch(0, ["root"]);
+
+        Assert.False(report.IsSuccess);
+        Assert.Equal("event.dispatch_limit_exceeded", report.Failure!.Error.Code);
+        Assert.Equal(0, report.Failure.EventIndex);
+        Assert.Equal(0, report.Failure.HandlerIndex);
+        Assert.Equal(["root"], report.DispatchedEvents);
+        Assert.Empty(report.FollowUpEvents);
+    }
+
+    [Fact]
+    public void BoundsTotalEffectIntents()
+    {
+        var pipeline = new EventDispatchPipeline<int, string, string>(
+        [
+            Handler(
+                (_, _) => true,
+                (_, _) => EventHandlerResult<string, string>.Success(
+                    effects: ["first", "second"]))
+        ],
+        new EventDispatchLimits(maximumEvents: 10, maximumHandlerInvocations: 10, maximumEffects: 1));
+
+        var report = pipeline.Dispatch(0, ["input"]);
+
+        Assert.False(report.IsSuccess);
+        Assert.Equal("event.effect_limit_exceeded", report.Failure!.Error.Code);
+        Assert.Empty(report.Effects);
+        Assert.Empty(report.FollowUpEvents);
     }
 
     private static DelegateEventHandler Handler(

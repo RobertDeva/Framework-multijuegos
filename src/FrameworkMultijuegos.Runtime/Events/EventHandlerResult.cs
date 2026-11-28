@@ -13,13 +13,14 @@ public sealed class EventHandlerResult<TEvent, TEffect>
         IEnumerable<TEvent> followUpEvents,
         IEnumerable<TEffect> effects)
     {
-        var eventSnapshot = followUpEvents.ToArray();
-        var effectSnapshot = effects.ToArray();
-
-        if (eventSnapshot.Any(item => item is null))
-            throw new ArgumentException("Follow-up events cannot contain null entries.", nameof(followUpEvents));
-        if (effectSnapshot.Any(item => item is null))
-            throw new ArgumentException("Effects cannot contain null entries.", nameof(effects));
+        var eventSnapshot = Snapshot(
+            followUpEvents,
+            EventDispatchLimits.MaximumSupportedEvents,
+            nameof(followUpEvents));
+        var effectSnapshot = Snapshot(
+            effects,
+            EventDispatchLimits.MaximumSupportedEffects,
+            nameof(effects));
 
         IsSuccess = isSuccess;
         Error = error;
@@ -41,5 +42,22 @@ public sealed class EventHandlerResult<TEvent, TEffect>
     {
         ArgumentNullException.ThrowIfNull(error);
         return new(false, error, [], []);
+    }
+
+    private static T[] Snapshot<T>(IEnumerable<T> values, int maximumCount, string parameterName)
+        where T : notnull
+    {
+        var snapshot = new List<T>();
+        foreach (var value in values)
+        {
+            if (value is null)
+                throw new ArgumentException("Output collections cannot contain null entries.", parameterName);
+            if (snapshot.Count >= maximumCount)
+                throw new ArgumentException("The handler output collection exceeds the supported limit.", parameterName);
+
+            snapshot.Add(value);
+        }
+
+        return snapshot.ToArray();
     }
 }

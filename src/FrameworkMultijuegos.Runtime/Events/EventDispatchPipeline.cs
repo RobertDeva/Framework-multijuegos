@@ -34,11 +34,29 @@ public sealed class EventDispatchPipeline<TContext, TEvent, TEffect>
     {
         ArgumentNullException.ThrowIfNull(initialEvents);
 
-        var initialSnapshot = initialEvents.ToArray();
-        if (initialSnapshot.Any(item => item is null))
-            throw new ArgumentException("Initial events cannot contain null entries.", nameof(initialEvents));
+        var pendingEvents = new Queue<TEvent>();
+        var scheduledEventCount = 0;
+        foreach (var initialEvent in initialEvents)
+        {
+            if (initialEvent is null)
+                throw new ArgumentException("Initial events cannot contain null entries.", nameof(initialEvents));
 
-        var pendingEvents = new Queue<TEvent>(initialSnapshot);
+            if (scheduledEventCount >= _limits.MaximumEvents)
+            {
+                return Failed(
+                    [],
+                    new EventDispatchFailure(
+                        new GameError(
+                            "event.dispatch_limit_exceeded",
+                            "The maximum number of events in this dispatch cascade was exceeded."),
+                        scheduledEventCount,
+                        null));
+            }
+
+            pendingEvents.Enqueue(initialEvent);
+            scheduledEventCount++;
+        }
+
         var dispatchedEvents = new List<TEvent>();
         var followUpEvents = new List<TEvent>();
         var effects = new List<TEffect>();
@@ -46,18 +64,6 @@ public sealed class EventDispatchPipeline<TContext, TEvent, TEffect>
 
         while (pendingEvents.Count > 0)
         {
-            if (dispatchedEvents.Count >= _limits.MaximumEvents)
-            {
-                return Failed(
-                    dispatchedEvents,
-                    new EventDispatchFailure(
-                        new GameError(
-                            "event.dispatch_limit_exceeded",
-                            "The maximum number of events in this dispatch cascade was exceeded."),
-                        dispatchedEvents.Count,
-                        null));
-            }
-
             var currentEvent = pendingEvents.Dequeue();
             dispatchedEvents.Add(currentEvent);
             var eventIndex = dispatchedEvents.Count - 1;
@@ -140,10 +146,35 @@ public sealed class EventDispatchPipeline<TContext, TEvent, TEffect>
                             handlerIndex));
                 }
 
+                if (handlerResult.FollowUpEvents.Count > _limits.MaximumEvents - scheduledEventCount)
+                {
+                    return Failed(
+                        dispatchedEvents,
+                        new EventDispatchFailure(
+                            new GameError(
+                                "event.dispatch_limit_exceeded",
+                                "The maximum number of scheduled events in this dispatch cascade would be exceeded."),
+                            eventIndex,
+                            handlerIndex));
+                }
+
+                if (handlerResult.Effects.Count > _limits.MaximumEffects - effects.Count)
+                {
+                    return Failed(
+                        dispatchedEvents,
+                        new EventDispatchFailure(
+                            new GameError(
+                                "event.effect_limit_exceeded",
+                                "The maximum number of effect intents in this dispatch cascade was exceeded."),
+                            eventIndex,
+                            handlerIndex));
+                }
+
                 foreach (var followUpEvent in handlerResult.FollowUpEvents)
                 {
                     followUpEvents.Add(followUpEvent);
                     pendingEvents.Enqueue(followUpEvent);
+                    scheduledEventCount++;
                 }
 
                 effects.AddRange(handlerResult.Effects);

@@ -23,14 +23,15 @@ Por ello, todos los eventos iniciales pendientes se procesan antes de los evento
 
 ## Límites y errores
 
-- Máximo predeterminado: 1.024 eventos por cascada.
+- Máximo predeterminado: 1.024 eventos programados por cascada (lote inicial + derivados).
 - Máximo predeterminado: 10.000 evaluaciones de handlers.
-- Techos duros configurables: 10.000 eventos y 100.000 evaluaciones.
+- Máximo predeterminado: 10.000 intenciones de efecto.
+- Techos duros configurables: 10.000 eventos, 100.000 evaluaciones y 100.000 intenciones de efecto.
 - Se informan fallos de filtro, handler, límite de eventos y límite de invocaciones con códigos estables.
 - `DispatchedEvents` conserva la traza hasta el punto del fallo.
 - Si cualquier handler falla, `FollowUpEvents` y `Effects` quedan vacíos en el reporte.
 
-Los límites impiden que una cadena cíclica o una combinación explosiva de handlers consuma trabajo sin cota. No se deduplican eventos: dos eventos iguales pueden ser legítimos.
+Los límites se comprueban antes de ampliar la cola y antes de acumular outputs, por lo que también acotan el tamaño de la cascada pendiente. Los resultados de handler limitan además sus snapshots individuales. No se deduplican eventos: dos eventos iguales pueden ser legítimos.
 
 ## Pureza y garantías
 
