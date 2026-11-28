@@ -23,7 +23,7 @@
 - [x] Acumulación ordenada de eventos e intenciones de efecto; se publican solo si todo el árbol tiene éxito.
 - [x] Fallos de precondición/handler y excepciones convertidos a errores estables.
 - [x] Despacho explícito de eventos con filtros/handlers registrados, orden determinista, cola FIFO y límites de cascada.
-- CI de esta vertical slice: commit `f5bf6f7e19a5dc518266d7d27d504bee4b45e306`, 50 pruebas aprobadas, cero warnings y cero errores.
+- CI de esta vertical slice y su endurecimiento: commit `b3d76f8133bb7444c3880b4df5cc10c1c318282b`, 53 pruebas aprobadas, cero warnings y cero errores.
 - [ ] Aplicación y modelo/ciclo de vida de efectos instantáneos/persistentes: origen, objetivo, duración, stacking, expiración y retirada.
 - [ ] Pruebas de integración de acciones + eventos + efectos con un módulo/juego real.
 - CI exitosa en commit `4e41a68977db414efdd9b9fe15cf9a2999c5c6bb`.
