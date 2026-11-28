@@ -1,11 +1,11 @@
 # Inventario técnico detallado — Game-Logic-motor
 
-**HEAD de origen verificado:** `788b4a5517a3c55dbc9780826ae0692f65af1949` (`main`)  
-**Árbol Git:** `f07f2d001065c0f1becc6219e3ca7cc5a0012cf1`  
+**HEAD de origen verificado:** `c63d0f7dd182d6c7a15a54da552282f17e4e56e2` (`main`)  
+**Árbol Git:** `67ac67b6c0ce84d255406eb63ba618a172b7a6bc`  
 **Destino:** `RobertDeva/Framework-multijuegos`  
-**Revisión:** 2026-11-27
+**Revisión:** 2026-11-28
 
-Este documento detalla los 129 archivos versionados del origen. Los 56 archivos C# de producción y los 31 de pruebas se enumeran individualmente. También se inventarían los 31 Markdown, cinco proyectos .NET y seis archivos de configuración.
+Este documento detalla los 130 archivos versionados del origen. Los 56 archivos C# de producción y los 31 de pruebas se enumeran individualmente. También se inventarían los 32 Markdown, cinco proyectos .NET y seis archivos de configuración.
 
 Clasificación: **Core** = mecanismo independiente de juego; **Módulo** = capacidad opcional que requiere contratos/políticas; **ME** = regla o semántica exclusiva de Mythical Exodus; **Host/Infra** = punto de entrada/adaptador; **Referencia** = prueba o documento que debe conservarse en el origen.
 
@@ -106,7 +106,7 @@ Clasificación: **Core** = mecanismo independiente de juego; **Módulo** = capac
 | `Statistics/StatModelTests.cs` | Identificadores, valores y modificadores | Mantener como referencia de módulo |
 | `Usings.cs` | Import global de xUnit | No migrar; pertenece a cada proyecto de pruebas |
 
-## C. Documentación de origen — 31 archivos Markdown
+## C. Documentación de origen — 32 archivos Markdown
 
 | Archivo | Tema | Clasificación | Tratamiento |
 |---|---|---|---|
@@ -122,6 +122,7 @@ Clasificación: **Core** = mecanismo independiente de juego; **Módulo** = capac
 | `docs/combat-mathematical-model.md` | Fórmulas y balance | ME | No convertir en regla genérica |
 | `docs/combat-resource-state-foundation.md` | Recursos en combate | Mixto | Referencia de módulo |
 | `docs/defensive-damage-calculation.md` | Daño defensivo | ME | Mantener |
+| `docs/derived-statistics-growth-model.md` | Modelo en evolución de crecimiento de atributos/estadísticas derivadas; conserva curvas anteriores y propuestas soft-cap pendientes | ME | Mantener en Mythical Exodus; no universalizar sus atributos, influencias ni parámetros |
 | `docs/domain-foundation.md` | Fundamentos de dominio | Mixto | Reutilizar ideas, no semántica ME |
 | `docs/energy-affinity-system.md` | Afinidades energéticas | ME | Mantener |
 | `docs/full-progression-economic-simulation.md` | Economía/progresión | ME | Mantener |
@@ -186,11 +187,13 @@ Clasificación: **Core** = mecanismo independiente de juego; **Módulo** = capac
 
 `ResourceId` y `ResourcePool` se han extraído a `FrameworkMultijuegos.Modules.Resources`, con proyecto y pruebas independientes. El módulo no referencia Core porque estos dos tipos no necesitan sus contratos. No implementa gasto, regeneración, costes, deuda, recarga ni overflow. Esa exclusión evita convertir políticas de un juego en comportamiento universal.
 
-## G. Primera capacidad de Runtime incorporada
+## G. Capacidades de Runtime incorporadas
 
-`FrameworkMultijuegos.Runtime` contiene un pipeline de ejecución de acciones registrado explícitamente. Ejecuta postacciones múltiples y anidadas en profundidad primero, conserva el orden de eventos/intenciones de efecto, detecta ciclos en la ruta de ancestros y limita profundidad e invocaciones. Los resultados se publican solo si todo el árbol tiene éxito. Los handlers deben ser deterministas y no mutar estado externo.
+`FrameworkMultijuegos.Runtime` contiene un pipeline de ejecución de acciones registrado explícitamente. Ejecuta postacciones múltiples y anidadas en profundidad primero, conserva el orden de eventos/intenciones de efecto, detecta ciclos en la ruta de ancestros y limita profundidad e invocaciones. Los resultados se publican solo si todo el árbol tiene éxito.
 
-El pipeline todavía no despacha eventos ni aplica efectos. La entrega de eventos, el ciclo de vida de efectos persistentes, stacking, expiración y retirada son trabajo pendiente; no se declaran implementados.
+`EventDispatchPipeline` consume un lote explícito de eventos en FIFO, evalúa filtros y handlers en orden de registro y permite que los handlers planifiquen nuevos eventos e intenciones de efecto. La cascada tiene límites predeterminados de 1.024 eventos y 10.000 evaluaciones de handlers, con techos duros de 10.000 y 100.000. Si falla cualquier handler o se supera un límite, el reporte conserva la traza procesada y descarta los outputs planificados.
+
+Ambos pipelines requieren handlers deterministas y sin mutaciones externas. El descarte de outputs no equivale a rollback de estado externo. La aplicación de efectos, su ciclo de vida persistente, stacking, duración, expiración y retirada por fuente siguen pendientes.
 
 ## H. Límites y riesgos
 
@@ -199,18 +202,19 @@ El pipeline todavía no despacha eventos ni aplica efectos. La entrega de evento
 3. Atributos, clases de personaje, energías, Muertebendita, Nemesis, resurrección, postura, fórmulas y balance permanecen fuera del Core.
 4. `ActionDefinition` solo describe y valida precondiciones; no ejecuta.
 5. `EntityBase.Remove()` solo retira una entidad de la simulación; no significa muerte/destrucción.
-6. El origen no contiene un pipeline general de eventos/efectos/postacciones. En destino existe un primer pipeline de acciones/postacciones; el despacho de eventos y la aplicación/lifecycle de efectos siguen pendientes.
+6. El origen no contiene un pipeline general de eventos/efectos/postacciones. En destino existen pipelines acotados de acciones/postacciones y despacho de eventos; la aplicación y el lifecycle de efectos siguen pendientes.
 7. No se añade ECS, carga dinámica de plugins, event sourcing, scripting ni editor sin casos de uso verificables.
 
 ## I. Reinspección y CI
 
-- HEAD origen: `788b4a5517a3c55dbc9780826ae0692f65af1949`; coincide con auditoría anterior.
+- HEAD origen: `c63d0f7dd182d6c7a15a54da552282f17e4e56e2`; árbol `67ac67b6c0ce84d255406eb63ba618a172b7a6bc`. La comparación con `788b4a5517a3c55dbc9780826ae0692f65af1949` muestra cuatro commits y dos archivos afectados: README modificado y `docs/derived-statistics-growth-model.md` añadido; no cambió código C# del origen.
 - CI origen, ejecución `45895955807`: restore/build/test exitosos.
 - CI inicial destino, ejecución `45918025870`: restore/build/test exitosos.
 - Commit de ciclo de vida/acciones/condiciones `e73cea1e5c37b9f994645c9c32d5bdf997c9bc39`: CI exitosa.
 - Commit de Resources `0819da1ad7e40b3d22af2992818c509f3566ed3f`: CI exitosa.
 - Commit de Runtime `4e41a68977db414efdd9b9fe15cf9a2999c5c6bb`: CI exitosa; 42 pruebas aprobadas, cero warnings y cero errores.
 - Commit documental actual `7fb3c6fab5ce640e5e8440699d376c07c93700ce`: CI de push y PR exitosa; no cambia código.
-- La última actualización documental fue validada por CI (ejecución `45919439554`): restore/build/test exitosos.
+- La última actualización documental previa fue validada por CI (ejecución `45919552547`): restore/build/test exitosos.
+- HEAD del destino antes de esta iteración: `2537c474cfc3b37309dbf879585ec1e3d1c9a990`; PR #1 abierto como borrador y sin merge. La nueva vertical slice de despacho de eventos queda pendiente de la CI de su commit.
 
 Actualizar este inventario si cambia el HEAD de origen o se incorpora una extracción nueva.

@@ -30,6 +30,10 @@ Un mismo ActionId puede aparecer en dos ramas hermanas. Se considera ciclo si vu
 
 Los handlers deben ser deterministas y no mutar el contexto ni estado externo. Deben describir los cambios deseados como intenciones de efecto. El pipeline no puede revertir mutaciones externas hechas indebidamente por un handler.
 
+## Composición con despacho de eventos
+
+`ActionExecutionPipeline` no despacha por sí mismo los eventos que produce. Si `ActionExecutionReport.IsSuccess` es `true`, el consumidor puede pasar `ActionExecutionReport.Events` a `EventDispatchPipeline<TContext,TEvent,TEffect>`. Este segundo pipeline procesa el lote en FIFO, evalúa los handlers en orden de registro y devuelve eventos derivados e intenciones de efecto. Consulta [despacho de eventos](event-dispatch.md) para sus límites y garantías.
+
 ## Qué no está implementado todavía
 
-El pipeline no despacha eventos, no aplica efectos y no gestiona efectos persistentes. Faltan los contratos de suscripción/entrega, el modelo de duración/stacking/expiración, la aplicación de efectos y sus pruebas de integración. No debe describirse como un sistema completo de eventos o efectos hasta que esas etapas existan.
+Runtime todavía no aplica efectos ni gestiona su ciclo de vida. Faltan el contrato de aplicación, duración, stacking, expiración, retirada por fuente y las garantías transaccionales de esa etapa. Tampoco hay pruebas de integración de la cadena completa con un juego cliente. Los pipelines de acciones y eventos solo publican outputs planificados si su propia ejecución completa tiene éxito; no pueden revertir mutaciones externas realizadas por handlers que incumplan el contrato de pureza.

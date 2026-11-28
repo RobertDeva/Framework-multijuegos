@@ -22,9 +22,9 @@
 - [x] Límites configurables de profundidad e invocaciones con máximos duros.
 - [x] Acumulación ordenada de eventos e intenciones de efecto; se publican solo si todo el árbol tiene éxito.
 - [x] Fallos de precondición/handler y excepciones convertidos a errores estables.
-- [ ] Despacho/entrega de eventos y política de suscriptores.
-- [ ] Modelo y ciclo de vida de efectos instantáneos/persistentes: origen, objetivo, duración, stacking, expiración y retirada.
-- [ ] Pruebas de integración con un módulo/juego real.
+- [x] Despacho explícito de eventos con filtros/handlers registrados, orden determinista, cola FIFO y límites de cascada.
+- [ ] Aplicación y modelo/ciclo de vida de efectos instantáneos/persistentes: origen, objetivo, duración, stacking, expiración y retirada.
+- [ ] Pruebas de integración de acciones + eventos + efectos con un módulo/juego real.
 - CI exitosa en commit `4e41a68977db414efdd9b9fe15cf9a2999c5c6bb`.
 
 ## Fase 3 — Módulos compartidos

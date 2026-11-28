@@ -7,7 +7,7 @@ Framework Multijuegos proporciona mecanismos reutilizables para construir juegos
 ## Capas
 
 1. **Core**: tipos fundamentales, invariantes pequeñas y deterministas; no depende de motores gráficos, almacenamiento ni aplicaciones.
-2. **Runtime**: orquestación de acciones y postacciones. La primera versión ejecuta árboles acotados y devuelve eventos e intenciones de efecto ordenados; el despacho de eventos y la aplicación/lifecycle de efectos se incorporarán en etapas posteriores.
+2. **Runtime**: orquestación de acciones/postacciones y despacho explícito de eventos. La primera versión ejecuta árboles acotados y entrega eventos mediante cascadas FIFO deterministas; devuelve intenciones de efecto, cuya aplicación y lifecycle se incorporarán en una etapa posterior.
 3. **Módulos compartidos**: capacidades opcionales y componibles (combate, estadísticas, recursos, inventario, IA, economía, misiones, progresión y narrativa). Ningún juego debe cargar módulos que no necesite.
 4. **Adaptadores/hosts**: integración con persistencia, presentación, motores de juego y procesos Headless.
 5. **Proyectos de juego**: contienen reglas, contenido, balance, narrativa, identidad y composición de módulos específicos.
